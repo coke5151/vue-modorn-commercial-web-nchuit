@@ -65,7 +65,6 @@ const cartStore = useCartStore();
 const cart = cartStore.cart;
 const totalPrice = cartStore.totalPrice;
 const router = useRouter();
-
 const form = ref({
     name: "",
     address: "",
@@ -73,15 +72,59 @@ const form = ref({
     payment: "",
 });
 
-// 📌 模擬提交訂單
-const placeOrder = () => {
+import axios from "axios";
+import { useAuthStore } from "@/stores/authStore";
+
+const authStore = useAuthStore();
+
+const placeOrder = async () => {
+    console.log("📌 準備發送 API 請求...",);
+    if (!authStore.user) {
+        alert("You need to log in to place an order.");
+        return;
+    }
+    
     if (!form.value.payment) {
         alert("Please select a payment method.");
         return;
     }
 
-    alert("Order placed successfully! 🎉");
-    cartStore.cart = []; // 清空購物車
-    router.push("/"); // 導回首頁
+    console.log("📌 準備發送 API 請求...");
+    console.log("📌 購物車內容:", cartStore.cart);
+
+    try {
+        const orderData = {
+            user_id: authStore.user, // ✅ 使用目前登入使用者的 ID
+            items: cartStore.cart.map(item => ({
+                product_id: item.id,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            total: cartStore.totalPrice, // 確保 totalPrice 是 cartStore 的計算屬性
+            name: form.value.name,
+            address: form.value.address,
+            phone: form.value.phone,
+            payment: form.value.payment
+        };
+
+        console.log("📌 訂單內容:", orderData);
+
+        const response = await axios.post("/api/place_order", orderData, {
+            headers: { "Content-Type": "application/json" }
+        });
+
+        console.log("📌 後端回應:", response.data);
+        alert("Order placed successfully! 🎉");
+
+        cartStore.cart = [];
+        router.push("/");
+    } catch (error) {
+        console.error("📌 請求錯誤:", error.response?.data || error.message);
+        alert("Order failed! ❌");
+    }
 };
+
+
+
+
 </script>

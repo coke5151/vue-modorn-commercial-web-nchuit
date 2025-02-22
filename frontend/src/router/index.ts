@@ -5,6 +5,8 @@ import ProductDetail from "../views/ProductDetail.vue";
 import CartView from "../views/CartView.vue";
 import CheckoutView from "../views/CheckoutView.vue";
 import UserProfile from "../views/UserProfile.vue";
+import SearchResults from '@/components/SearchResults.vue';
+
 
 const routes = [
   { path: "/", component: HomeView },
@@ -13,6 +15,17 @@ const routes = [
   { path: "/cart", component: CartView },
   { path: "/checkout", component: CheckoutView },
   { path: "/profile", component: UserProfile },
+  { path: '/search', component: SearchResults },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/LoginView.vue"),
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: () => import("../views/RegisterView.vue"),
+  },
 ];
 
 const router = createRouter({

@@ -21,4 +21,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:5000/api",
+        changeOrigin: true,
+        secure: true,  // 如果 Flask 使用 HTTPS，設為 false
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
+  },
 })
