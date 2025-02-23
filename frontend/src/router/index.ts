@@ -26,6 +26,16 @@ const routes = [
     name: "Register",
     component: () => import("../views/RegisterView.vue"),
   },
+  {
+    path: "/order/:id",
+    name: "OrderDetail",
+    component: () => import("../views/OrderDetail.vue"),
+  },
+  {
+    path: "/news/:id",
+    name: "NewsDetail",
+    component: () => import("../views/NewsDetail.vue"),
+  }
 ];
 
 const router = createRouter({

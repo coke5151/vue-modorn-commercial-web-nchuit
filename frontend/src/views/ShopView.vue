@@ -20,13 +20,16 @@
                 <option value="0-100">$0 - $100</option>
                 <option value="100-500">$100 - $500</option>
                 <option value="500-1000">$500 - $1000</option>
+                <option value="1000-1500">$1000 - $1500</option>
+                <option value="1500-2000">$1500 - $2000</option>
+                <option value="2000-99999999">$2000+</option>
             </select>
         </div>
 
         <!-- 🛒 商品列表 -->
         <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
             <div v-for="product in filteredProducts" :key="product.id" class="bg-white shadow-md rounded-lg p-4">
-                <img :src="product.image" alt="product" class="w-full h-40 object-cover rounded">
+                <img :src="url + product.image_url" alt="product" class="w-full h-40 object-cover rounded">
                 <h2 class="text-lg font-semibold mt-2">{{ product.name }}</h2>
                 <p class="text-gray-500">${{ product.price }}</p>
                 <router-link :to="'/product/' + product.id" class="text-blue-500 mt-2 inline-block">View
@@ -37,21 +40,13 @@
 </template>
 
 <script setup>
+import { useProductStore } from "@/stores/productStore";
+import { storeToRefs } from "pinia";
 import { ref, computed } from "vue";
 
-const products = ref([
-    {
-        id: 1, name: "Gaming Mouse 1", category: 'Pet Food', price: 999, stock: 188, brand: "Logitech", connectionType: "Wireless", gamingCertified: true,
-        comboSet: false, productType: "Standard", BSMI: "R41126", NCC: "CCAI23LP0120T2", shippingLocation: "Kaohsiung, Taiwan",
-        image: new URL('@/assets/00001.jpg', import.meta.url).href
-    },
-
-    {
-        id: 2, name: "Gaming Mouse 2", category: 'Pet Food', price: 799, stock: 374, brand: "Logitech", connectionType: "Wired", gamingCertified: true,
-        comboSet: false, productType: "Special Edition", BSMI: "R41127", NCC: "CCAI23LP0120T3", shippingLocation: "Taipei, Taiwan",
-        image: new URL('@/assets/00002.jpg', import.meta.url).href
-    }
-]);
+const ProcductStore = useProductStore();
+const { products } = storeToRefs(ProcductStore);
+const url = new URL("@/", import.meta.url).href;
 
 const searchQuery = ref("");
 const selectedCategory = ref("");

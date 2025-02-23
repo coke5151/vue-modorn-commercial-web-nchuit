@@ -11,7 +11,15 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">Email</label>
-                <input v-model="user.email" type="email" class="border p-2 w-full rounded-lg" disabled />
+                <input v-model="user.email" type="email" class="border p-2 w-full rounded-lg bg-gray-200" disabled />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Address</label>
+                <input v-model="user.address" type="text" class="border p-2 w-full rounded-lg" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700">Birth Date</label>
+                <input v-model="user.birth_date" type="date" class="border p-2 w-full rounded-lg" />
             </div>
             <button @click="saveProfile"
                 class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
@@ -20,42 +28,48 @@
         </div>
 
         <!-- 訂單歷史記錄 -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h2 class="text-xl font-semibold mb-4">Order History</h2>
-            <div v-if="orders.length">
-                <div v-for="order in orders" :key="order.id" class="border-b p-4">
-                    <p><strong>Order ID:</strong> {{ order.id }}</p>
-                    <p><strong>Date:</strong> {{ order.date }}</p>
-                    <p><strong>Total:</strong> ${{ order.total }}</p>
-                </div>
-            </div>
-            <p v-else class="text-gray-500">No orders found.</p>
-        </div>
+        <OrderHistory></OrderHistory>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
+import OrderHistory from "./OrderHistory.vue";
 
-// 模擬使用者資料
 const user = ref({
-    name: "John Doe",
-    email: "john.doe@example.com",
+    name: "",
+    email: "",
+    address: "",
+    birth_date: "",
 });
 
-// 模擬訂單數據
-const orders = ref([]);
+const token = localStorage.getItem("token");  // 取得儲存的 JWT Token
 
-// 假裝從 API 載入訂單
-onMounted(() => {
-    orders.value = [
-        { id: "12345", date: "2025-02-08", total: 49.99 },
-        { id: "67890", date: "2025-02-05", total: 79.99 },
-    ];
-});
-
-// 模擬儲存用戶資料
-const saveProfile = () => {
-    alert("Profile updated successfully! 🎉");
+const fetchUserProfile = async () => {
+    try {
+        const response = await axios.get("/api/profile", {
+            headers: { Authorization: `Bearer ${token}` }  // 附加 JWT Token
+        });
+        user.value = response.data;
+    } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+    }
 };
+
+const saveProfile = async () => {
+    try {
+        await axios.put("/api/profile", user.value, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        alert("Profile updated successfully! 🎉");
+    } catch (error) {
+        console.error("Failed to update profile:", error);
+        alert("Update failed! ❌");
+    }
+};
+
+
+// 進入頁面時載入資料
+onMounted(fetchUserProfile);
 </script>

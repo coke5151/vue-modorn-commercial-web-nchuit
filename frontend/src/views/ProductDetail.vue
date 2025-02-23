@@ -2,7 +2,7 @@
     <div class="container mx-auto px-6 py-10">
         <div v-if="product" class="flex flex-col md:flex-row gap-6">
             <!-- 商品圖片 -->
-            <img :src="product.image" alt="product image" class="w-full md:w-1/3 object-cover rounded-lg" />
+            <img :src="url + product.image_url" alt="product image" class="w-full md:w-1/3 object-cover rounded-lg" />
 
             <!-- 商品資訊 -->
             <div class="flex-1">
@@ -19,7 +19,7 @@
 
                 <!-- 商品標題與價格 -->
                 <h1 class="text-3xl font-bold">{{ product.name }}</h1>
-                <p class="text-gray-500 text-lg mt-2">${{ product.price }}</p>
+                <p class="text-gray-500 text-lg mt-2">${{ product.discounted_price != 0 ? product.discounted_price : product.price }} NT</p>
 
                 <!-- 商品規格 -->
                 <div class="mt-6 border-t pt-4">
@@ -57,23 +57,15 @@
 import { ref, computed } from "vue";
 import { useRoute } from "vue-router";
 import { useCartStore } from "@/stores/cartStore";
+import { useProductStore } from "@/stores/productStore";
+import { storeToRefs } from "pinia";
 
 const route = useRoute();
 const cartStore = useCartStore();
 
-const products = ref([
-    {
-        id: 1, name: "Gaming Mouse 1", category: 'Pet Food', price: 999, stock: 188, brand: "Logitech", connectionType: "Wireless", gamingCertified: true,
-        comboSet: false, productType: "Standard", BSMI: "R41126", NCC: "CCAI23LP0120T2", shippingLocation: "Kaohsiung, Taiwan",
-        image: new URL('@/assets/00001.jpg', import.meta.url).href
-    },
-
-    {
-        id: 2, name: "Gaming Mouse 2", category: 'Pet Food', price: 799, stock: 374, brand: "Logitech", connectionType: "Wired", gamingCertified: true,
-        comboSet: false, productType: "Special Edition", BSMI: "R41127", NCC: "CCAI23LP0120T3", shippingLocation: "Taipei, Taiwan",
-        image: new URL('@/assets/00002.jpg', import.meta.url).href
-    }
-]);
+const ProductStore = useProductStore()
+const { loading,products } = storeToRefs(ProductStore)
+const url = new URL('@/', import.meta.url).href;
 
 const quantity = ref(1);
 const product = computed(() => products.value.find((p) => p.id == route.params.id));

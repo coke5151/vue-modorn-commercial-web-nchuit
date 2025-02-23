@@ -3,11 +3,11 @@
         <h1 class="text-3xl font-bold">Your Cart</h1>
 
         <div v-if="cart.length" class="mt-6">
-            <div v-for="item in cart" :key="item.id"
+            <div v-for="item in postcart" :key="item.id"
                 class="flex items-center justify-between p-4 border rounded-lg mb-4">
                 
                 <div class="flex items-center">
-                    <img :src="item.image" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
+                    <img :src="url + item.image_url" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
                     <div>
                         <h2 class="text-lg font-semibold">{{ item.name }}</h2>
                         <p class="text-gray-500">${{ item.price }} x {{ item.quantity }}</p>
@@ -39,11 +39,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import { useCartStore } from "@/stores/cartStore";
+import { storeToRefs } from 'pinia';
+import { computed } from "vue";
 
 const cartStore = useCartStore();
-const cart = computed(() => cartStore.cart);
-const totalPrice = computed(() => cartStore.totalPrice);
-const removeFromCart = cartStore.removeFromCart;
+const { removeFromCart } = cartStore;
+const {cart, totalPrice} = storeToRefs(cartStore);
+const postcart = computed(() => cart.value);
+console.log(postcart.value);
+const url = new URL('@/', import.meta.url).href;
 </script>

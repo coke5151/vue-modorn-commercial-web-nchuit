@@ -1,14 +1,14 @@
 from models.database import get_db_connection
 
-def create_user(email, password_hash):
+def create_user(email, password_hash, name, address, birth_date):
     """ 創建用戶 """
     conn = get_db_connection()
     cursor = conn.cursor()
     
     try:
         cursor.execute(
-            "INSERT INTO users (email, password) VALUES (%s, %s)",
-            (email, password_hash)
+            "INSERT INTO users (email, password_hash, name, address, birth_date ) VALUES (%s, %s, %s, %s, %s)",
+            (email, password_hash, name, address, birth_date)
         )
         conn.commit()
         return {"message": "User registered successfully"}
@@ -41,4 +41,20 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 
+def update_user(user_id, name, address, birth_date):
+    """ 更新用戶資料 """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute(
+            "UPDATE users SET name = %s, address = %s, birth_date = %s WHERE id = %s",
+            (name, address, birth_date, user_id)
+        )
+        conn.commit()
+        return {"message": "User updated successfully"}
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        cursor.close()
 

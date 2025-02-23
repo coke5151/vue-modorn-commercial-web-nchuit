@@ -3,24 +3,26 @@ import { ref, computed } from "vue";
 
 export const useCartStore = defineStore("cart", () => {
   // 🛒 購物車列表
-  const cart = ref<
-    {
-      id: number;
-      name: string;
-      price: number;
-      image: string;
-      quantity: number;
-      stock: number;
-      brand: string;
-      connectionType: string;
-      gamingCertified: boolean;
-      comboSet: boolean;
-      productType: string;
-      BSMI: string;
-      NCC: string;
-      shippingLocation: string;
-    }[]
-  >([]);
+  const cart =ref<
+        {
+            id: number;
+            name: string;
+            category: string;
+            price: number;
+            discountPrice: number;
+            image_url: string;
+            quantity: number;
+            stock: number;
+            brand: string;
+            connectionType: string;
+            gamingCertified: boolean;
+            comboSet: boolean;
+            productType: string;
+            BSMI: string;
+            NCC: string;
+            shippingLocation: string;
+        }[]
+    >([]);
 
   // 🛒 新增商品
   const addToCart = (product: typeof cart.value[0]) => {

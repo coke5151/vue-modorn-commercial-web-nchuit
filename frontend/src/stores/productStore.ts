@@ -1,23 +1,32 @@
 // src/stores/productStore.ts
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import axios from 'axios';
 
 export const useProductStore = defineStore('product', () => {
-    const products = ref([
+    const products = ref<
         {
-            id: 1, name: "Gaming Mouse 1", category: 'Pet Food', price: 999, stock: 188, brand: "Logitech", connectionType: "Wireless", gamingCertified: true,
-            comboSet: false, productType: "Standard", BSMI: "R41126", NCC: "CCAI23LP0120T2", shippingLocation: "Kaohsiung, Taiwan",
-            image: new URL('@/assets/00001.jpg', import.meta.url).href
-        },
-
-        {
-            id: 2, name: "Gaming Mouse 2", category: 'Pet Food', price: 799, stock: 374, brand: "Logitech", connectionType: "Wired", gamingCertified: true,
-            comboSet: false, productType: "Special Edition", BSMI: "R41127", NCC: "CCAI23LP0120T3", shippingLocation: "Taipei, Taiwan",
-            image: new URL('@/assets/00002.jpg', import.meta.url).href
-        }
-    ]);
+            id: number;
+            name: string;
+            category: string;
+            price: number;
+            discounted_price: number;
+            image_url: string;
+            quantity: number;
+            stock: number;
+            brand: string;
+            connectionType: string;
+            gamingCertified: boolean;
+            comboSet: boolean;
+            productType: string;
+            BSMI: string;
+            NCC: string;
+            shippingLocation: string;
+        }[]
+    >([]);
     const searchQuery = ref('');
     const selectedCategories = ref<string[]>([]);
+    const loading = ref(true); // 追蹤加載狀態
 
     const filteredProducts = computed(() => {
         let result = products.value;
@@ -31,7 +40,6 @@ export const useProductStore = defineStore('product', () => {
         if (selectedCategories.value.length > 0) {
             result = result.filter(product => selectedCategories.value.includes(product.category));
         }
-        alert(result);
         return result;
     });
 
@@ -39,11 +47,28 @@ export const useProductStore = defineStore('product', () => {
         Array.from(new Set(products.value.map(product => product.category)))
     );
 
-    return {
+    // 註冊
+    const fetchData = async () => {
+        try {
+            loading.value = false; // 開始載入
+            const response = await axios.get("/api/products");
+            console.log("獲取資料成功:", response.data);
+            products.value = response.data;
+            return true;
+        } catch (error: any) {
+            console.error("獲取資料失敗:", error.response?.data || error.message);
+            return false;
+        } finally {
+            loading.value = true; //
+        }
+    };
+
+    return {    
         products,
         searchQuery,
         selectedCategories,
         filteredProducts,
         uniqueCategories,
+        fetchData,
     };
 });

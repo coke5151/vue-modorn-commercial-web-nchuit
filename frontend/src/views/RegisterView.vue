@@ -4,12 +4,24 @@
             <h2 class="text-2xl font-semibold text-center mb-6">Register</h2>
             <form @submit.prevent="handleRegister">
                 <div class="mb-4">
+                    <label class="block text-gray-700">Name</label>
+                    <input v-model="form.name" type="text" required class="border p-2 w-full rounded-lg" />
+                </div>
+                <div class="mb-4">
                     <label class="block text-gray-700">Email</label>
-                    <input type="email" v-model="form.email" required class="border p-2 w-full rounded-lg" />
+                    <input v-model="form.email" type="email" required class="border p-2 w-full rounded-lg" />
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Password</label>
-                    <input type="password" v-model="form.password" required class="border p-2 w-full rounded-lg" />
+                    <input v-model="form.password" type="password" required class="border p-2 w-full rounded-lg" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Address</label>
+                    <input v-model="form.address" type="text" required class="border p-2 w-full rounded-lg" />
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Birth Date</label>
+                    <input v-model="form.birth_date" type="date" required class="border p-2 w-full rounded-lg" />
                 </div>
                 <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition mt-4">
                     Register
@@ -30,18 +42,21 @@ import axios from "axios";
 
 const router = useRouter();
 const form = ref({
+    name: "",
     email: "",
     password: "",
+    address: "",
+    birth_date: "",
 });
 
 const handleRegister = async () => {
     try {
-        const response = await axios.post("/api/auth/register", form.value);
-        alert("Registration successful!");
+        await axios.post("/api/auth/register", form.value);
+        alert("Registration successful! ✅");
         router.push("/login");
     } catch (error) {
-        console.error(error);
-        alert("Registration failed! ❌");
+        console.error(error.response?.data?.error || "Registration failed!");
+        alert(error.response?.data?.error || "Registration failed! ❌");
     }
 };
 </script>

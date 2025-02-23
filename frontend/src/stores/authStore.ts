@@ -5,7 +5,7 @@ import axios from "axios";
 
 // 登入回應類型
 interface LoginResponse {
-    token: string;
+    access_token: string;
     user_id: string;
 }
 
@@ -18,9 +18,10 @@ export const useAuthStore = defineStore("auth", () => {
 
     // 設定 Token & 使用者資訊
     const setAuth = (authData: LoginResponse) => {
-        token.value = authData.token;
+
+        token.value = authData.access_token;
         user.value = authData.user_id;
-        localStorage.setItem("token", authData.token);
+        localStorage.setItem("token", authData.access_token);
     };
 
     // 登入

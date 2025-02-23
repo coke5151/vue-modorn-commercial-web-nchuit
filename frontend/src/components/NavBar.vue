@@ -103,7 +103,8 @@ const productStore = useProductStore();
 const searchQuery = ref('');
 const router = useRouter();
 const search = () => {
-    productStore.searchQuery = searchQuery.value;
+    if(searchQuery.value.trim() === '') return;
+    productStore.searchQuery = searchQuery.value.trim();
     router.push({ path: '/search' });
 };
 
