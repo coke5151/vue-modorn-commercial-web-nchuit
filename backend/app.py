@@ -5,6 +5,7 @@ from routes.orders import orders_bp
 from routes.product import product_bp
 from routes.news import news_bp
 from routes.user import user_bp
+from routes.chatbot import chatbot_bp
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ app.register_blueprint(orders_bp, url_prefix='/api')
 app.register_blueprint(product_bp, url_prefix='/api')
 app.register_blueprint(news_bp, url_prefix='/api')
 app.register_blueprint(user_bp, url_prefix='/api')
+app.register_blueprint(chatbot_bp, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0',port=5000)

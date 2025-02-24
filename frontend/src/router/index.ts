@@ -35,7 +35,22 @@ const routes = [
     path: "/news/:id",
     name: "NewsDetail",
     component: () => import("../views/NewsDetail.vue"),
-  }
+  },
+  {
+    path: "/about",
+    name: "About",
+    component: () => import("../views/About.vue"),
+  },
+  { 
+    path: '/contact',
+    name: 'Contact',
+    component: () => import('../views/Contact.vue')
+  },
+  { 
+    path: '/privacy', 
+    name: 'PrivacyPolicy',
+    component: () => import('../views/PrivacyPolicy.vue')
+  },
 ];
 
 const router = createRouter({

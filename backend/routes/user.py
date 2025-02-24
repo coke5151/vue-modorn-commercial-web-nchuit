@@ -9,7 +9,6 @@ user_bp = Blueprint('user', __name__)
 def get_profile():
     user_id = get_jwt_identity()  # 取得 JWT Token 內的使用者 ID
     user = get_user_by_id(user_id)  # 查詢用戶資料
-    print(user)
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify({
