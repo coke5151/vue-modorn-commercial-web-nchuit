@@ -9,11 +9,9 @@ AI Commerce Project 是一個基於 AI 推薦的現代化電商平台，使用 V
 本專案採用了以下技術棧：
 
 - **前端**：Vue 3、Vite、Tailwind CSS
-- **後端**：Node.js、Express
+- **後端**：Flask
 - **資料庫**：MySQL
-- **快取與 Session 管理**：Redis
 - **API 請求**：Axios
-- **環境變數管理**：dotenv
 
 ## 3. 專案結構
 
