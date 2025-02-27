@@ -2,14 +2,14 @@
 
 ## 1. 項目簡介
 
-AI Commerce Project 是一個基於 AI 推薦的現代化電商平台，使用 Vue.js 作為前端框架，Node.js 作為後端，並搭配 MySQL 進行數據存儲。該平台旨在提供個性化購物體驗，透過 AI 推薦技術優化用戶體驗。
+AI Commerce Project 是一個基於 AI 推薦的現代化電商平台，使用 Vue.js 作為前端框架，Flask 作為後端，並搭配 MySQL 進行數據存儲。該平台旨在提供個性化購物體驗，透過 AI 推薦技術優化用戶體驗。
 
 ## 2. 技術棧
 
 本專案採用了以下技術棧：
 
 - **前端**：Vue 3、Vite、Tailwind CSS
-- **後端**：Flask
+- **後端**：Flask、Gemeni Flash
 - **資料庫**：MySQL
 - **API 請求**：Axios
 
@@ -19,18 +19,29 @@ AI Commerce Project 是一個基於 AI 推薦的現代化電商平台，使用 V
 ai-commerce/
 │── backend/         # 伺服器端
 │   ├── models/      # 資料庫模型
+│   │   ├── database.py  # 資料庫連線&登入
+│   │   ├── product.py # 產品資料表
+│   │   ├── user.py # 使用者資料表
 │   ├── routes/      # API 路由
-│   ├── services/    # 業務邏輯層
+│   │   ├── auth.py # 登入&註冊功能API
+│   │   ├── chatbot.py # AI客服功能API
+│   │   ├── news.py # 最新消息功能API
+│   │   ├── orders.py # 訂貨單功能API
+│   │   ├── product.py # 產品列表功能API
+│   │   ├── user.py # 使用者資料功能API
 │   ├── app.py       # 伺服器入口
-│   ├── .env         # 環境變數設定
+│   ├── config.py    # 環境變數設定(資料庫帳密)
 │
 │── frontend/        # 前端應用
 │   ├── src/         # 核心程式碼
-│   │   ├── assets/  # 靜態資源
-│   │   ├── components/ # Vue 元件
-│   │   ├── views/   # 頁面組件
-│   │   ├── main.js  # Vue 入口
-│   ├── public/      # 靜態 HTML
+│   │   ├── assets/  # 靜態資源(圖片、CSS、SVG)
+│   │   ├── components/ # Vue 元件 (頁面中的小元件設計)
+│   │   ├── views/   # 頁面組件 (整個頁面設計)
+│   │   ├── routes/   # 路由 (每一個頁面的路徑)
+│   │   ├── stores/   # Pinia資料存儲庫 (每一個資料表的獲取&儲存 export成全域變數)
+│   │   ├── App.vue  # Vue 主體 (整體頁面基底設計)
+│   │   ├── main.ts  # Vue 入口 (整體頁面基底掛載邏輯)
+│   ├── public/      # 靜態 HTML ()
 │   ├── index.html   # 應用入口
 │
 │── deploy/          # 部署相關設定
@@ -50,16 +61,22 @@ mkdir ai-commerce && cd ai-commerce
 
 ```sh
 mkdir backend && cd backend
-npm init -y
-npm install express mysql2 redis dotenv axios cors
+pip install flask flask_cors flask_jwt_extended google.generativeai requests pymysql
+# python原生的pip套件管理或者miniconda套件管理去下載所有需要的套件(packages)
+conda install flask flask_cors flask_jwt_extended google.generativeai requests pymysql
+
+# 如果上述方法有問題請用以下方法
+conda create -n flask_env python=3.12
+conda activate flask_env
+conda install -c conda-forge flask requests pymysql
+pip install flask_cors flask_jwt_extended google.generativeai
 ```
 
 #### 後端程式結構
 
 - `models/`：定義 MySQL 資料模型
 - `routes/`：API 路由設計
-- `services/`：封裝業務邏輯
-- `app.js`：Express 應用入口
+- `app.py`：Flask 應用入口
 
 #### 建立 `app.js`
 
@@ -121,13 +138,25 @@ export default defineConfig({
 @import "tailwindcss";
 ```
 
-#### 配置 `main.js`
+#### 配置 `main.ts`
 
-```js
-import { createApp } from 'vue';
-import App from './App.vue';
-import './assets/main.css';
-createApp(App).mount('#app');
+```ts
+import './assets/main.css'
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')
+
 ```
 
 ### 4.4 啟動應用
