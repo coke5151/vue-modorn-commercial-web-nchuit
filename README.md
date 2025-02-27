@@ -85,7 +85,7 @@ pip install flask_cors flask_jwt_extended google.generativeai
 - `routes/`：API 路由設計
 - `app.py`：Flask 應用入口
 
-#### 建立 `app.js`
+#### 建立 `app.py`
 
 ```python
 from flask import Flask
