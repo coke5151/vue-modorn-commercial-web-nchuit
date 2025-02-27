@@ -21,7 +21,7 @@ ai-commerce/
 │   ├── models/      # 資料庫模型
 │   ├── routes/      # API 路由
 │   ├── services/    # 業務邏輯層
-│   ├── app.js       # 伺服器入口
+│   ├── app.py       # 伺服器入口
 │   ├── .env         # 環境變數設定
 │
 │── frontend/        # 前端應用
@@ -63,15 +63,34 @@ npm install express mysql2 redis dotenv axios cors
 
 #### 建立 `app.js`
 
-```js
-const express = require('express');
-const cors = require('cors');
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.get('/', (req, res) => res.send('AI Commerce Backend Running'));
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+```python
+from flask import Flask
+from flask_cors import CORS
+from routes.auth import auth_bp
+from routes.orders import orders_bp
+from routes.product import product_bp
+from routes.news import news_bp
+from routes.user import user_bp
+from routes.chatbot import chatbot_bp
+from flask_jwt_extended import JWTManager
+
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+app.config["JWT_SECRET_KEY"] = "your_secret_key"
+app.config["JWT_IDENTITY_CLAIM"] = "sub"
+
+jwt = JWTManager(app)  # 啟動 JWT
+
+app.register_blueprint(auth_bp, url_prefix='/api/auth')
+app.register_blueprint(orders_bp, url_prefix='/api')
+app.register_blueprint(product_bp, url_prefix='/api')
+app.register_blueprint(news_bp, url_prefix='/api')
+app.register_blueprint(user_bp, url_prefix='/api')
+app.register_blueprint(chatbot_bp, url_prefix='/api')
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0',port=5000)
 ```
 
 ### 4.3 建立前端應用
