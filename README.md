@@ -54,18 +54,25 @@ ai-commerce/
 ### 4.1 建立專案目錄
 
 ```sh
+#此指令是初始化安裝的人使用
 mkdir ai-commerce && cd ai-commerce
+#請使用我的檔案
+git clone https://github.com/asddzxcc1856/vue-modorn-commercial-web.git
 ```
 
 ### 4.2 建立後端應用
 
 ```sh
+#此指令是初始化安裝的人使用
 mkdir backend && cd backend
+#請使用我的檔案(上面打過可以跳過此指令)
+git clone https://github.com/asddzxcc1856/vue-modorn-commercial-web.git
+#請安裝python的環境(二選一)
 pip install flask flask_cors flask_jwt_extended google.generativeai requests pymysql
 # python原生的pip套件管理或者miniconda套件管理去下載所有需要的套件(packages)
 conda install flask flask_cors flask_jwt_extended google.generativeai requests pymysql
 
-# 如果上述方法有問題請用以下方法
+# 如果上述方法有問題請用以下方法(此方法使用miniconda+pip)
 conda create -n flask_env python=3.12
 conda activate flask_env
 conda install -c conda-forge flask requests pymysql
@@ -113,9 +120,13 @@ if __name__ == '__main__':
 ### 4.3 建立前端應用
 
 ```sh
+#此指令是初始化安裝的人使用
 cd ../frontend
 npm create vue@latest .
 npm install tailwindcss @tailwindcss/vite
+
+#請使用下列方法可以把 package.json 的套件所有都裝近來(沒裝不能動，因為github上面沒有那些套件)
+npm install
 ```
 
 #### 配置 Tailwind CSS
