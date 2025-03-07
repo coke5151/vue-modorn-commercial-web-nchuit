@@ -7,7 +7,7 @@
                 class="flex items-center justify-between p-4 border rounded-lg mb-4">
                 
                 <div class="flex items-center">
-                    <img :src="url + item.image_url" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
+                    <img :src="item.image_url" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
                     <div>
                         <h2 class="text-lg font-semibold">{{ item.name }}</h2>
                         <p class="text-gray-500">${{ item.price }} x {{ item.quantity }}</p>
@@ -47,6 +47,4 @@ const cartStore = useCartStore();
 const { removeFromCart } = cartStore;
 const {cart, totalPrice} = storeToRefs(cartStore);
 const postcart = computed(() => cart.value);
-console.log(postcart.value);
-const url = new URL('@/', import.meta.url).href;
 </script>

@@ -6,7 +6,7 @@
         <div v-if="cart.length" class="mb-6">
             <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
             <div v-for="item in cart" :key="item.id" class="flex justify-between p-4 border-b">
-                <img :src="url + item.image_url" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
+                <img :src="item.image_url" alt="cart item" class="w-20 h-20 object-cover rounded-lg mr-4" />
                 <span>{{ item.name }} (x{{ item.quantity }})</span>
                 <span>${{ item.price * item.quantity }} NT</span>
             </div>
@@ -88,8 +88,6 @@ const cart = cartStore.cart;
 const totalPrice = cartStore.totalPrice;
 const router = useRouter();
 const authStore = useAuthStore();
-
-const url = new URL("@/", import.meta.url).href;
 
 const form = ref({ name: "", city: "", district: "", address: "", phone: "", payment: "" });
 const errors = ref({ name: "", phone: "" });

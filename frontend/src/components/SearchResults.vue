@@ -19,7 +19,7 @@
             <div v-if="filteredProducts.length">
                 <div v-for="product in filteredProducts" :key="product.id"
                     class="border rounded-lg p-4 mb-4 flex items-center">
-                    <img :src="url + product.image_url" alt="product image" class="w-20 h-20 object-cover rounded-lg mr-4" />
+                    <img :src="product.image_url" alt="product image" class="w-20 h-20 object-cover rounded-lg mr-4" />
                     <div>
                         <h3 class="text-lg font-bold">{{ product.name }}</h3>
                         <p class="text-gray-500">{{ product.brand }}</p>
@@ -41,5 +41,4 @@ import { useProductStore } from '@/stores/productStore';
 import { storeToRefs } from 'pinia';
 const productStore = useProductStore();
 const { filteredProducts, uniqueCategories, selectedCategories, searchQuery }= storeToRefs(productStore);
-const url = new URL('@/', import.meta.url).href;
 </script>

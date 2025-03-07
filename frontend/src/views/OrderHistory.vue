@@ -23,7 +23,7 @@
                     <h3 class="font-semibold">商品列表：</h3>
                     <ul>
                         <li v-for="item in order.items" :key="item.product_id" class="flex items-center gap-4 py-2">
-                            <img :src="url + item.image" alt="商品圖片" class="w-16 h-16 rounded-md object-cover">
+                            <img :src="item.image" alt="商品圖片" class="w-16 h-16 rounded-md object-cover">
                             <div>
                                 <router-link :to="{
                                     path: '/product/' + item.product_id
@@ -63,5 +63,4 @@ const goToOrderDetail = (order) => {
     });
 };
 fetchOrders(); // 🚀 取得訂單列表
-const url = new URL('@/', import.meta.url).href;
 </script>

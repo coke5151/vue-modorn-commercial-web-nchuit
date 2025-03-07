@@ -2,7 +2,7 @@
     <div class="container mx-auto px-6 py-10">
         <div v-if="product" class="flex flex-col md:flex-row gap-6">
             <!-- 商品圖片 -->
-            <img :src="url + product.image_url" alt="product image" class="w-full md:w-1/3 object-cover rounded-lg" />
+            <img :src="product.image_url" alt="product image" class="w-full md:w-1/3 object-cover rounded-lg" />
 
             <!-- 商品資訊 -->
             <div class="flex-1">
@@ -65,7 +65,6 @@ const cartStore = useCartStore();
 
 const ProductStore = useProductStore()
 const { loading,products } = storeToRefs(ProductStore)
-const url = new URL('@/', import.meta.url).href;
 
 const quantity = ref(1);
 const product = computed(() => products.value.find((p) => p.id == route.params.id));

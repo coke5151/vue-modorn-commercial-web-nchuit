@@ -8,7 +8,7 @@
 
         <!-- 橫幅圖片 -->
         <div class="mb-6">
-            <img :src="url + news.image_url" alt="News banner" class="w-full rounded-lg shadow-md">
+            <img :src="news.image_url" alt="News banner" class="w-full rounded-lg shadow-md">
         </div>
 
         <!-- 文章內容 -->
@@ -36,6 +36,5 @@ const { newsList } = storeToRefs(newsStore);
 if (newsList.value.length === 0 || newsList.value === null || newsList.value === undefined)
     newsStore.fetchNews();
 const news = computed(() => newsList.value.find((news) => news.id === Number(route.params.id)));
-const url = new URL('@/', import.meta.url).href;
 const markdownText = computed(() => news.value.content);
 </script>

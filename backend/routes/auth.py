@@ -35,7 +35,7 @@ def register():
         return jsonify({"error": "Name must be at least 2 Chinese characters"}), 400
 
     # 🛑 檢查地址（確保是台灣地址格式）
-    if not re.match(r".+縣|市.+鄉|鎮|市.+路|街.+號.*", address):
+    if not re.match(r"^(?:(\S{2,3}[縣市]))\s*(\S{2,3}[鄉鎮市區])?\s*(\S+[路街道巷弄])(\d+號?)?", address):
         return jsonify({"error": "Invalid Taiwan address format"}), 400
 
     # 🛑 檢查生日格式（YYYY-MM-DD）

@@ -29,7 +29,7 @@
         <!-- 🛒 商品列表 -->
         <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
             <div v-for="product in filteredProducts" :key="product.id" class="bg-white shadow-md rounded-lg p-4">
-                <img :src="url + product.image_url" alt="product" class="w-full h-40 object-cover rounded">
+                <img :src="product.image_url" alt="product" class="w-full h-40 object-cover rounded">
                 <h2 class="text-lg font-semibold mt-2">{{ product.name }}</h2>
                 <p class="text-gray-500">${{ product.price }}</p>
                 <router-link :to="'/product/' + product.id" class="text-blue-500 mt-2 inline-block">View
@@ -46,7 +46,6 @@ import { ref, computed } from "vue";
 
 const ProcductStore = useProductStore();
 const { products } = storeToRefs(ProcductStore);
-const url = new URL("@/", import.meta.url).href;
 
 const searchQuery = ref("");
 const selectedCategory = ref("");

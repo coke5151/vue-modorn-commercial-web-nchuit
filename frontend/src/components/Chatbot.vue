@@ -41,7 +41,7 @@
             <!-- 📝 訊息輸入框 -->
             <div class="chat-input flex items-center gap-2 px-4 pb-4">
                 <input v-model="userMessage" @keyup.enter="sendMessage" placeholder="輸入訊息..." class="w-full p-2 border rounded-lg" />
-                <button @click="sendMessage" class="bg-blue-500 text-white px-4 py-2 rounded-lg">送出</button>
+                <button @click="sendMessage" :disabled="isSending" class="bg-blue-500 text-white px-4 py-2 rounded-lg">送出</button>
             </div>
         </div>
     </div>
@@ -98,17 +98,17 @@ import VueMarkdownRender from "vue-markdown-render";
 const isChatOpen = ref(false);
 const messages = ref([]);
 const userMessage = ref("");
-const router = useRouter();
+const isSending = ref(false);
 
 const toggleChat = () => {
     isChatOpen.value = !isChatOpen.value;
 };
 
 const sendMessage = async () => {
-    if (!userMessage.value.trim()) return;
+    if (isSending.value || !userMessage.value.trim()) return;  // 若正在發送訊息或訊息為空，則不處理
 
+    isSending.value = true;  // 設定為正在發送訊息
     messages.value.push({ data: `🧑‍💻 你: ${userMessage.value}`, isUser: true });
-
     try {
         const response = await axios.post("/api/chat", { message: userMessage.value });
 
@@ -140,6 +140,7 @@ const sendMessage = async () => {
     }
 
     userMessage.value = "";
+    isSending.value = false;  // 設定為發送完成
 };
 
 </script>
