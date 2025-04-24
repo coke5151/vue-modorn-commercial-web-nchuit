@@ -1,16 +1,19 @@
-import re
-from flask import Blueprint, request, jsonify
 import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from models.user import create_user, get_user_by_email
+import re
+
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from ..models.user import create_user, get_user_by_email
 
 auth_bp = Blueprint("auth", __name__)
+
 
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-    
+
     # 取得表單資料
     email = data.get("email")
     password = data.get("password")
@@ -52,6 +55,7 @@ def register():
 
     return jsonify(result), 201
 
+
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -60,15 +64,16 @@ def login():
 
     user = get_user_by_email(email)
     if user and check_password_hash(user["password_hash"], password):
-        access_token = create_access_token(identity=str(user["id"]), expires_delta=datetime.timedelta(days=1))  
+        access_token = create_access_token(identity=str(user["id"]), expires_delta=datetime.timedelta(days=1))
         return jsonify({"message": "Login successful", "access_token": access_token, "user_id": user["id"]})
 
     return jsonify({"error": "Invalid credentials"}), 401
 
+
 @auth_bp.route("/protected", methods=["GET"])
 @jwt_required()
 def protected():
-    """ 測試是否能夠正確取得 `user_id` """
+    """測試是否能夠正確取得 `user_id`"""
     user_id = get_jwt_identity()
 
     return jsonify({"message": "Access granted", "user_id": user_id})

@@ -1,4 +1,5 @@
-from models.database import get_db_connection
+from .database import get_db_connection
+
 
 def get_all_products():
     conn = get_db_connection()

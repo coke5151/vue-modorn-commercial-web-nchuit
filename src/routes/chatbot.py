@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
 import google.generativeai as genai
 import requests
-from models.database import get_db_connection
+from flask import Blueprint, jsonify, request
+
+from ..models.database import get_db_connection
 
 chatbot_bp = Blueprint("chatbot", __name__)
 
@@ -14,6 +15,7 @@ SEARCH_ENGINE_ID = "4514dc2fb56214165"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
+
 # 商品推薦（假設你有 MySQL 資料庫）
 def get_recommended_products():
     return [
@@ -22,6 +24,7 @@ def get_recommended_products():
         {"id": 103, "name": "iPhone 15 Pro Max", "price": "NT$45,900"},
     ]
 
+
 # Google Custom Search API（RAG）
 def search_google(query):
     url = f"https://www.googleapis.com/customsearch/v1?key={SEARCH_API_KEY}&cx={SEARCH_ENGINE_ID}&q={query}"
@@ -29,12 +32,14 @@ def search_google(query):
     results = [item["snippet"] for item in response.get("items", [])]
     return "\n".join(results)
 
+
 def get_products():
     conn = get_db_connection()
     cursor = conn.cursor()
-    sql = f"SELECT id, name, price FROM products LIMIT 5"
+    sql = "SELECT id, name, price FROM products LIMIT 5"
     cursor.execute(sql)
     return cursor.fetchall()
+
 
 # API 路由：處理 AI 聊天
 @chatbot_bp.route("/chat", methods=["POST"])
@@ -42,8 +47,6 @@ def chat():
     data = request.get_json()
     user_message = data.get("message")
 
-    # RAG + Gemini 回應
-    search_results = ""
     # 從資料庫查詢相關商品
     # 查詢商品
     related_products = get_products()
@@ -51,8 +54,8 @@ def chat():
     prompt = f"""
     使用者問題: {user_message}
 
-    請 **直接回答與購物相關的問題**，並根據資料庫中的商品資訊推薦正確的商品。  
-    如果問題與購物無關，請回覆：「這個問題我無法回答，請詢問客服。」  
+    請 **直接回答與購物相關的問題**，並根據資料庫中的商品資訊推薦正確的商品。
+    如果問題與購物無關，請回覆：「這個問題我無法回答，請詢問客服。」
 
     ### **回答格式：**
     1. **簡要回答用戶問題**

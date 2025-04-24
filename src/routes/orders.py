@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
-from models.database import get_db_connection
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
+from ..models.database import get_db_connection
 
 orders_bp = Blueprint("order", __name__)  # 建立 Blueprint 物件
 
@@ -18,9 +19,7 @@ def place_order():
     address = city + district + address  # 合併地址
     phone = data.get("phone")  # 新增 phone 欄位
     payment = data.get("payment")  # 新增 payment 欄位
-    if not (
-        user_id and items and total and name and address and phone and payment
-    ):  # 檢查是否有缺少參數
+    if not (user_id and items and total and name and address and phone and payment):  # 檢查是否有缺少參數
         return jsonify({"error": "缺少必要參數"}), 400  # 回應錯誤訊息
 
     conn = get_db_connection()  # 建立資料庫連線
@@ -28,9 +27,7 @@ def place_order():
 
     try:
         # 插入訂單
-        cursor.execute(
-            "INSERT INTO orders (user_id, total) VALUES (%s, %s)", (user_id, total)
-        )  # 插入訂單
+        cursor.execute("INSERT INTO orders (user_id, total) VALUES (%s, %s)", (user_id, total))  # 插入訂單
         order_id = cursor.lastrowid  # 取得最新的訂單 ID
 
         # 插入訂單商品
@@ -71,7 +68,7 @@ def get_user_orders():
     try:
         query = """
             SELECT o.id AS order_id, o.total, o.created_at,
-                   p.id AS product_id, p.name AS product_name, 
+                   p.id AS product_id, p.name AS product_name,
                    p.image_url, oi.quantity, oi.price
             FROM orders o
             JOIN order_items oi ON o.id = oi.order_id

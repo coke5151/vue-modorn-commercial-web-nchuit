@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.user import get_user_by_id, update_user
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
-user_bp = Blueprint('user', __name__)
+from ..models.user import get_user_by_id, update_user
+
+user_bp = Blueprint("user", __name__)
+
 
 @user_bp.route("/profile", methods=["GET"])
 @jwt_required()  # 確保只有登入後的用戶才能存取
@@ -11,12 +13,15 @@ def get_profile():
     user = get_user_by_id(user_id)  # 查詢用戶資料
     if not user:
         return jsonify({"error": "User not found"}), 404
-    return jsonify({
-    "name": user["name"],
-    "email": user["email"],
-    "address": user["address"],
-    "birth_date": user["birth_date"].strftime("%Y-%m-%d"),
-})
+    return jsonify(
+        {
+            "name": user["name"],
+            "email": user["email"],
+            "address": user["address"],
+            "birth_date": user["birth_date"].strftime("%Y-%m-%d"),
+        }
+    )
+
 
 @user_bp.route("/profile", methods=["PUT"])
 @jwt_required()

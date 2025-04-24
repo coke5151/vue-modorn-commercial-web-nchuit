@@ -1,21 +1,24 @@
 import pymysql
-from pymysql.cursors import DictCursor
 from flask import Flask
-from config import Config
+from pymysql.cursors import DictCursor
+
+from ..config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+
 def get_db_connection():
-    """ 建立 MySQL 連線（每次請求時調用）"""
+    """建立 MySQL 連線（每次請求時調用）"""
     conn = pymysql.connect(
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB'],
-        cursorclass=DictCursor
+        host=app.config["MYSQL_HOST"],
+        user=app.config["MYSQL_USER"],
+        password=app.config["MYSQL_PASSWORD"],
+        database=app.config["MYSQL_DB"],
+        cursorclass=DictCursor,
     )
     return conn
+
 
 """
 CREATE DATABASE ai_commerce;
